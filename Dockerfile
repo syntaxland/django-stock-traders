@@ -1,7 +1,7 @@
 # Using an official python runtime as the base image
 FROM python:3.9-alpine 
 # Set the working directory in the container
-WORKDIR /djangoapi
+WORKDIR /django-stock-traders
 # Upgrade pip
 RUN pip install --upgrade pip
 # Copy requirements.txt to the container
