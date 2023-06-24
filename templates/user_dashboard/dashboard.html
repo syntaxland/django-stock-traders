@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <h2 class="text-center">Create Trader</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="traderInput">Trader Name</label>
+                        <input id="traderInput" class="form-control" type="text" name="trader" placeholder="Enter trader name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amountInput">Initial Amount</label>
+                        <input id="amountInput" class="form-control" type="number" name="amount" placeholder="Enter initial amount" step="0.01" required>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center">User Dashboard</h1>
+                <canvas id="chart"></canvas>
+                <script>
+                    const traderData = [];
+                    const labels = Array.from(Array(60).keys());
+
+                    {% for trader in traders %}
+                    traderData.push({
+                        trader: '{{ trader.trader | title }}', 
+                        data: {{ trader.profit_loss|safe }}
+                    });
+                    {% endfor %}
+
+                    const datasets = traderData.map(({ trader, data }) => {
+                        const dataWithColor = data.map((value, index) => {
+                            const color = value >= 0 ? 'rgba(75, 192, 192, 0.2)' : 'rgba(255, 99, 132, 0.2)';
+                            const borderColor = value >= 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)';
+                            return {
+                                x: labels[index],
+                                y: value,
+                                color,
+                                borderColor
+                            };
+                        });
+
+                        return {
+                            label: trader,
+                            data: dataWithColor,
+                            backgroundColor: dataWithColor.map(obj => obj.color),
+                            borderColor: dataWithColor.map(obj => obj.borderColor),
+                            borderWidth: 1
+                        };
+                    });
+
+                    const ctx = document.getElementById('chart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: datasets
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {
+                                    display: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Minute'
+                                    }
+                                },
+                                y: {
+                                    display: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Profit/Loss'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
+
