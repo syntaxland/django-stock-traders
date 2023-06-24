@@ -120,7 +120,59 @@ git pull origin main
 ===================================================================================================
 ### Docker
 ===================================================================================================
-
+## Docker && Docker Compose CMDs 
+docker -v
+docker version
+docker ps -a
+<!-- Build and run Docker Image: -->
+docker pull <image-name>
+docker images
+docker rmi <image-name-or-id>
+docker build -t <image-name-or-id> . <!-- To build image. Add `.` to build at cwd -->
+docker run -p 8000:8000 <image-name-or-id> <!-- To run built image -->
+<!-- Psshing Images to Docker Hub: -->
+docker login
+docker tag <image-name-or-id> <username>/<repository>:<tag>
+docker push <username>/<repository>:<tag> 
+docker tag djangoapi jondebosco/dockerized-djangoapi:v1.0
+docker push jondebosco/dockerized-djangoapi:v1.0
+<!-- Build and run Docker Image: -->
+docker exec -it djangoapi_container /bin/bash
+docker exec -it 8a2449609dee7b579 /bin/sh
+docker exec -it 6343202eec sh
+vi filename
+i => insert mode
+Esc => excape
+:wq => save exit 
+<!-- Docker Container CMD -->
+docker start <contaner-name or id>
+docker restart <contaner-name or id>
+docker stop  <contaner-name or id>
+<!-- Some Docker Compose CMDs -->
+docker-compose run <image>
+docker-compose run django-admin startproject core .
+docker-compose build
+docker-compose up
+docker-compose up --build
+docker-compose up -d
+<!-- Some Docker Volume CMDs-->
+docker volume ls
+docker volume rm
+<!-- Stopping kubernetes pods: -->
+kubectl get pods
+kubectl delete pod <pod-name>
+kubectl delete pod pod1 pod <!-- or kubectl delete pod -l <label-selector> -->
+kubectl delete pod server-57674c8695-rnpv2 
+kubectl delete pod mongo-6cf8cb4db5-kz9hq myapp-79f957b9b9-97db5 server-57674c8695-rnpv2 
+<!-- To run Kubernetes containers: -->
+kubectl get deployments
+kubectl get replicationcontrollers
+kubectl scale deployment <deployment-name> --replicas=<desired-replicas>
+kubectl apply -f <path-to-updated-config-file>
+<!-- Deploying fullstack app with kube -->
+kubectl create -f mongo-d.yml
+kubectl delete -f app-s.yml 
+kubectl apply -f app-d.yml
 ===================================================================================================
 ### AWS (Cloud)
 ===================================================================================================
