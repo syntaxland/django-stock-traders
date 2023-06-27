@@ -108,7 +108,7 @@ CustomUser.objects.filter().last()
 git status
 git init <!-- or `git init -b main` -->
 git add . <!--or to add all files `git add CMDs-Readme.md` -->
-git commit -m "first commit" <!-- git commit -m "updated CMDs-Readme.md" -->
+git commit -m "first commit" <!-- git commit -m "new update" -->
 <!-- Create Remote Repo and Push to remote repo  -->
 git remote add origin https://github.com/syntaxland/django-stock-traders.git
 git branch -M main
