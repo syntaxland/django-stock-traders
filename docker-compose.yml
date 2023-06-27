@@ -11,24 +11,17 @@
 #     image: app:djangoapi
 #     container_name: djangoapi_container
 #     command: python manage.py runserver 0.0.0.0:8000
-#     depends_on:
-#       - db
+version: '3'
+services: 
+  traderapi-deployment:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8000:80'
 
-#   db:
-#     image: postgres
-#     volumes:
-#       # - db_data:/var/lib/postgresql/data
-#       - ./data/db:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_DB=secret
-#       - POSTGRES_USER=secret
-#       - POSTGRES_PASSWORD=secret
-#     container_name: postgres_db
 
 # # docker-compose build
 # # docker-compose run app
-# # docker-compose up
-# # docker-compose run rm app django-admin startproject core .
-# # docker exec -it djangoapi_container /bin/bash
-# # or
-# # docker exec -it djangoapi_container /bin/sh
+# # docker-compose up -d --build
+# # docker exec -it traderapi /bin/sh

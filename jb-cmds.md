@@ -16,16 +16,21 @@ deactivate <!-- To deactivate venv for Ubuntu/Unix MacOS -->
 pip install --upgrade pip
 pip install django 
 pip install python-dotenv <!-- for .env -->
-pip install djongo <!-- for `mongo` which will also require/install `pymongo` and `dnspython` while `psycopg2-binary` and `mysqlclient` for `postgres` n `mysql` resp-->
-pip install pandas matplotlib <!-- for some visualizations -->
-pip install django-crispy-forms crispy-bootstrap4 bootstrap4  <!-- # You will need to pip install crispy-bootstrap4 and add crispy_bootstrap4 to your list of INSTALLED_APPS.
-'crispy-bootstrap4' add: CRISPY_TEMPLATE_PACK = 'bootstrap4' to settings.py -->
+pip install djongo <!-- for `mongo` which will also require/install `pymongo` and `dnspython` while `psycopg2-binary
+mysqlclient` and `psycopg2-binary
+mysqlclient` for `postgres` n `mysql` resp-->
 pip install xhtml2pdf <!-- for  xhtml to pdf conversions and downloads -->
+pip install django-crispy-forms crispy-bootstrap4 bootstrap4  <!-- # You will need to pip install crispy-bootstrap4 and add crispy_bootstrap4 to your list of INSTALLED_APPS. Also add: CRISPY_TEMPLATE_PACK = 'bootstrap4' to settings.py -->
+pip install pandas matplotlib <!-- for some visualizations -->
 pip install channels channels_redis <!-- for live data streaming  --> 
 pip install Pillow <!-- for files --> 
 pip install djangorestframework django-cors-headers <!-- for DRF pointing to React, Vue or Angular -->
 pip install gunicorn <!-- for nginx (prod) -->
-<!-- pip install django python-dotenv djongo django-crispy-forms crispy-bootstrap4 bootstrap4 coverage flake8 pep8 pandas matplotlib Pillow xhtml2pdf channels channels_redis  djangorestframework django-cors-headers -->
+<!-- 
+pip install django python-dotenv djongo django-crispy-forms crispy-bootstrap4 bootstrap4 coverage flake8 pep8 pandas xhtml2pdf 
+pip install djongo psycopg2-binary mysqlclient
+pip install matplotlib Pillow  channels channels_redis  djangorestframework django-cors-headers 
+ -->
 ===================================================================================================
 ### Some Basic Django Testings with `coverage`, flake8 and pep8 
 ===================================================================================================
@@ -117,10 +122,9 @@ git branch -r <!--To checkout remote... git checkout <remote-branch-name> -->
 git branch -a <!--To checkout both -->
 <!-- Pulling from remote origin -->
 git pull origin main
+===================================================================================================#### Docker | Docker Compose | kubernetes
 ===================================================================================================
-### Docker
-===================================================================================================
-## Docker && Docker Compose CMDs 
+#### Docker
 docker -v
 docker version
 docker ps -a
@@ -128,14 +132,14 @@ docker ps -a
 docker pull <image-name>
 docker images
 docker rmi <image-name-or-id>
-docker build -t <image-name-or-id> . <!-- To build image. Add `.` to build at cwd -->
-docker run -p 8000:8000 <image-name-or-id> <!-- To run built image -->
-<!-- Psshing Images to Docker Hub: -->
+docker build -t traderapi . <!-- To build image. Add trailing `.` to build at pwd -->
+docker run -p 8000:8000 traderapi <!-- To run the built image -->
+<!-- Pushing Images to Docker Hub: -->
 docker login
 docker tag <image-name-or-id> <username>/<repository>:<tag>
 docker push <username>/<repository>:<tag> 
-docker tag djangoapi jondebosco/dockerized-djangoapi:v1.0
-docker push jondebosco/dockerized-djangoapi:v1.0
+docker tag traderapi jondebosco/traderapi:v1.0 <!-- Tag the built image -->
+docker push jondebosco/traderapi:v1 <!-- Then push the image -->
 <!-- Build and run Docker Image: -->
 docker exec -it djangoapi_container /bin/bash
 docker exec -it 8a2449609dee7b579 /bin/sh
@@ -148,16 +152,22 @@ Esc => excape
 docker start <contaner-name or id>
 docker restart <contaner-name or id>
 docker stop  <contaner-name or id>
-<!-- Some Docker Compose CMDs -->
+#### Docker-Compose 
 docker-compose run <image>
 docker-compose run django-admin startproject core .
 docker-compose build
 docker-compose up
-docker-compose up --build
+docker-compose up --build -d
 docker-compose up -d
 <!-- Some Docker Volume CMDs-->
 docker volume ls
 docker volume rm
+<!-- Error Handling -->
+<!-- # RUN pip install --no-cache-dir -r requirements.txt -->
+docker builder prune
+docker-compose build --no-cache
+docker-compose up -d
+#### kubernetes
 <!-- Stopping kubernetes pods: -->
 kubectl get pods
 kubectl delete pod <pod-name>
@@ -176,7 +186,7 @@ kubectl apply -f app-d.yml
 ===================================================================================================
 ### AWS (Cloud)
 ===================================================================================================
-
+pip install awscli <!-- for aws cmds --> 
 ===================================================================================================
 ### CI-CD | GitHub Actions | Jenkens | AWS CodePipeLine
 ===================================================================================================

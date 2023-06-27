@@ -50,28 +50,41 @@ INSTALLED_APPS = [
     'djongo',
     'crispy_forms', 
     'crispy_bootstrap4', 
-    'channels',
+    # 'channels',
+
+    # # required for django allauth
+    # 'django.contrib.sites',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+
+    # # ... include the providers you want to enable:
+    # 'allauth.socialaccount.providers.google',
+    # # 'allauth.socialaccount.providers.facebook',
+    # # 'allauth.socialaccount.providers.github',
+
+    # 'captcha',
 ]
 
-# pip install crispy-bootstrap4 and 
-# add crispy_bootstrap4 to INSTALLED_APPS.
+# pip install django-crispy-forms crispy-bootstrap4  
+# add crispy_bootstrap4 to INSTALLED_APPS
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# Configure django channels
-ASGI_APPLICATION = 'trader_dashboard.routing.application'
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('localhost', 6379)],
-        },
-    },
-}
+# # Configure django channels
+# ASGI_APPLICATION = 'trader_dashboard.routing.application'
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             'hosts': [('localhost', 6379)],
+#         },
+#     },
+# }
 
-# update SIGNALS_MODULES
-SIGNALS_MODULES = [
-    'user_dashboard.signals',
-]
+# # update SIGNALS_MODULES
+# SIGNALS_MODULES = [
+#     'user_dashboard.signals',
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -141,6 +154,17 @@ DATABASES = {
 #      }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.getenv('DB_NAME'),
+#         'USER': os.getenv('DB_USER'),
+#         'PASSWORD': os.getenv('DB_PASSWORD'),
+#         'HOST': os.getenv('DB_HOST'),
+#         'PORT': int(os.getenv('DB_PORT')),
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -185,3 +209,46 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# for google login option
+SITE_ID = 1
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# for sms otp
+TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
+
+MY_PHONE_NUMBER  = os.getenv('MY_PHONE_NUMBER')
+
+# for captcha
+RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
+RECAPTCHA_REQUIRED_SCORE = os.getenv('RECAPTCHA_REQUIRED_SCORE')
+
+# for email otp
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.sendinblue.com'
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_SENDER_NAME = os.getenv('EMAIL_SENDER_NAME')
+
+# for email otp api key
+SENDINBLUE_API_KEY = os.getenv('SENDINBLUE_API_KEY')

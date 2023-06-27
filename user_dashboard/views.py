@@ -52,7 +52,7 @@ def dashboard(request):
             amount = form.cleaned_data['amount']
             profit_loss = []
             for minute in range(60):
-                profit_loss.append(round(random.uniform(-10, 10), 2))
+                profit_loss.append(round(random.uniform(-100, 100), 2))
             trader = TraderData(trader=trader_name, amount=amount, profit_loss=profit_loss)
             trader.save()
             return redirect('dashboard')

@@ -1,0 +1,13 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/django-stock-traders
+ExecStart=/home/ubuntu/env/bin/gunicorn --access-logfile - --workers 3 --bind unix:/home/ubuntu/django-stock-traders/trader_dashboard/trader_dashboard.sock trader_dashboard.wsgi:application
+
+       
+[Install]
+WantedBy=multi-user.target

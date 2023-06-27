@@ -1,5 +1,45 @@
-venv
-docker-compose
+# Exclude specific files
+file.txt
+secret.key
+private.pem
+
+# Exclude specific directories
+node_modules/
+venv/
+dist/
+build/
+target/
+
+# Exclude files with specific extensions
+*.log
+*.tmp
+*.bak
+
+# Exclude version control system directories
+.git/
+.svn/
+.hg/
+
+# Exclude IDE-specific files and directories
+.idea/
+.vscode/
+*.iml
+
+# Exclude documentation
+docs/
+
+# Exclude temporary files
+*.swp
+*.swo
+*.DS_Store
+
+# Exclude editor backup files
+*~
+#*
+
+# Exclude system and hidden files
+.*
+
 htmlcov
 media
-.gitignore
+

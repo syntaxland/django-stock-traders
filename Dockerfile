@@ -7,8 +7,8 @@ RUN pip install --upgrade pip
 # Copy requirements.txt to the container
 COPY ./requirements.txt .
 # Install application dependencies
-# RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+# RUN pip install -r requirements.txt
 # Copy the application code to the container
 COPY . .
 # # Run database migrations
@@ -18,6 +18,10 @@ EXPOSE 8000
 # Define the command to run the application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
+FROM nginx:latest
+COPY --from=0 /django-stock-traders /usr/share/nginx/html
 
-# docker build -t djangoapi .
-# docker run -d -p 8002:8000 djangoapi 
+
+
+# docker build -t traderapi .
+# docker run -d -p 8002:8000 traderapi 
