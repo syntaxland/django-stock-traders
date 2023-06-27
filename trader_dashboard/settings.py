@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     # started apps 
     'user_dashboard', 
     # installed libs
-    'djongo',
+    # 'djongo',
     'crispy_forms', 
     'crispy_bootstrap4', 
     # 'channels',
