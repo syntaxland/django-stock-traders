@@ -10,7 +10,7 @@ env:
   AWS_REGION: us-east-1
   EB_APPLICATION_NAME: e-traderapi
   EB_ENVIRONMENT_NAME: E-traderapi-env
-  VERSION_LABEL: 1
+  VERSION_LABEL: 2
 
 jobs:
   CI:
