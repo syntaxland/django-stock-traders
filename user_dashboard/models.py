@@ -4,7 +4,7 @@ class TraderData(models.Model):
     trader = models.CharField(max_length=100, unique=True)
     amount = models.DecimalField(default="100.00", max_digits=10, decimal_places=2)
     profit_loss = models.JSONField(default=list)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
 
 class AdminDashboardData(models.Model):
     total_profit = models.FloatField()

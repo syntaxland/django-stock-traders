@@ -66,30 +66,31 @@ python manage.py runserver <!-- To run the server at django default port 8000 --
 python manage.py createsuperuser <!-- To create a super user for the admin dashboard -->
 ===================================================================================================
 Username: admin
-Email address: admin@example.com
-Password: admin12345
+Email address: syntaxland@gmail.com
+Password: boz1234567
 ===================================================================================================
 ### QuerySets
 ===================================================================================================
 python manage.py shell <!-- To run the shell for some testings-->
->>> import os
->>> import django
->>> os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yoursite.settings')
->>> django.setup()
+import os
+import django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yoursite.settings')
+django.setup()
 from django.contrib.auth.models import User
 from user_dashboard.models import TraderData
-from user_dashboard.models import AdminDashboardData
-#### Model QuerySets
+from user_dashboard.models import AdminDashboardData 
+from myaccount.models import Profile
+<!-- #### Model QuerySets -->
 TraderData.objects.all()
 AdminDashboardData.objects.all()
+Profile.objects.all()
 <!-- Creating model instance -->
 user = User.objects.create(username='ken')
 email = 'user@gmail.com'
 traders = TraderData.objects.create(user=user, email=email)
 <!-- Deleting a model instance(s) -->
 TraderData.objects.all().delete()
-TraderData.objects.filter().first().delete()
-#### User Model QuerySets
+<!-- #### User Model QuerySets -->
 User.objects.all()
 User.objects.filter().last()
 <!-- Creating a user -->

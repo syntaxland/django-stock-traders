@@ -1,0 +1,29 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    padding-bottom: 100px; 
+    padding-top: 60px;
+    margin-bottom: 60px; 
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px; 
+    background-color: #343a40; /* Customize the background color */
+    color: #fff; /* Customize the text color */
+    text-align: center;
+}
+
+.page-break {
+    page-break-after: always;
+}
+
+.navbar-nav.ml-auto .dropdown-menu {
+    right: 0;
+    left: auto;
+}

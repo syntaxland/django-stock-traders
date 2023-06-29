@@ -46,29 +46,34 @@ INSTALLED_APPS = [
 
     # started apps 
     'user_dashboard', 
+    'myaccount',
+    # 'captcha_api', 
+    'email_otp_auth',
+ 
     # installed libs
-    # 'djongo',
+    'captcha', # pip install django-recaptcha 
     'crispy_forms', 
     'crispy_bootstrap4', 
-    # 'channels',
+    # 'djongo',
+    # 'channels', 
 
-    # # required for django allauth
-    # 'django.contrib.sites',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-
+    # # required for django allauth => pip install django-allauth==0.52.0
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+ 
     # # ... include the providers you want to enable:
-    # 'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.google',
     # # 'allauth.socialaccount.providers.facebook',
     # # 'allauth.socialaccount.providers.github',
-
-    # 'captcha',
-]
+]  
 
 # pip install django-crispy-forms crispy-bootstrap4  
 # add crispy_bootstrap4 to INSTALLED_APPS
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+  
+# AUTH_USER_MODEL = 'myaccount.User'
 
 # # Configure django channels
 # ASGI_APPLICATION = 'trader_dashboard.routing.application'
@@ -211,6 +216,14 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # for google login option
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    # 'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -225,6 +238,24 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     }
 }
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#         ],
+#         'APP': {
+#             'client_id': os.getenv('GOOGLE_OAUTH2_CLIENT_ID'),
+#             'secret': os.getenv('GOOGLE_OAUTH2_CLIENT_SECRET'),
+#             'key': '',
+#         },
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         },
+#         'OAUTH_PKCE_ENABLED': True,
+#     }
+# }
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'

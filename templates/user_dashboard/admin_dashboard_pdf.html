@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        /* Add your custom styling for the PDF here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .chart-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            margin-right: 10px;
+        }
+
+        .text-right {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Metrics</th>
+                <th>Values</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Total Profit</td>
+                <td>{{ admin_dashboard_data.total_profit }}</td>
+            </tr>
+            <tr>
+                <td>Total Loss</td>
+                <td>{{ admin_dashboard_data.total_loss }}</td>
+            </tr>
+            <tr>
+                <td>Highest Profit Trader</td>
+                <td>{{ admin_dashboard_data.highest_profit_trader | title }}</td>
+            </tr>
+            <tr>
+                <td>Lowest Profit Trader</td>
+                <td>{{ admin_dashboard_data.lowest_profit_trader | title }}</td>
+            </tr>
+            <tr>
+                <td>Timestamp</td>
+                <td>{{ admin_dashboard_data.timestamp }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center mt-3">
+        <button class="btn btn-primary" onclick="switchChart('bar')">Bar Chart</button>
+        <button class="btn btn-primary" onclick="switchChart('pie')">Pie Chart</button>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="chart"></canvas>
+    </div>
+
+    <script>
+        const totalProfit = {{ admin_dashboard_data.total_profit }};
+        const totalLoss = {{ admin_dashboard_data.total_loss }};
+
+        const ctx = document.getElementById('chart').getContext('2d');
+        let chart;
+
+        function createBarChart() {
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Profit', 'Total Loss'],
+                    datasets: [{
+                        label: 'Metrics',
+                        data: [totalProfit, totalLoss],
+                        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Metrics'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Values'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createPieChart() {
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Total Profit', 'Total Loss'],
+                    datasets: [{
+                        label: 'Metrics',
+                        data: [totalProfit, totalLoss],
+                        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            display: false
+                        },
+                        y: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function switchChart(type) {
+            if (chart) {
+                chart.destroy();
+            }
+
+            if (type === 'bar') {
+                createBarChart();
+            } else if (type === 'pie') {
+                createPieChart();
+            }
+        }
+
+        createBarChart();
+    </script>
+    <footer class="footer mt-auto py-3 bg-dark text-white">
+        <div class="container text-center">
+            <span class="text-muted">&copy; 2023 e-Trader API. All rights reserved.</span>
+        </div>
+    </footer>
+
+</body>
+</html>
