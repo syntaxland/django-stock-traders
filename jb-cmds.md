@@ -202,6 +202,7 @@ kubectl apply -f app-d.yml
 ### AWS (Cloud)
 ===================================================================================================
 <!-- ## AWS Elastic Beanstalk dpl -->
+aws configure <!-- for access secret key config --> 
 pip install awscli <!-- for aws cmds --> 
 aws --version
 <!-- install awsebcli -->
@@ -210,15 +211,26 @@ eb --version
 <!-- configure  .ebextensions/django.config -->
 option_settings:
   aws:elasticbeanstalk:container:python:
-    WSGIPath: ebdjango.wsgi:application
+    WSGIPath: trader_dashboard.wsgi:application
 <!-- initiate eb to create .elasticbeanstalk/config.yml -->
-eb init -p python-3.9 app-ebdjango
+eb init -p python-3.9 e-traderapi
 <!-- create env -->
-eb create env-ebdjango
+eb create e-traderapi-env
 <!-- others -->
 eb status
-<!-- add  CNAME to settings.py allowed host -->
-ALLOWED_HOSTS = ['env-ebdjango.eba-pvwy6ir2.us-west-2.elasticbeanstalk.com']
+<!--Environment details for: e-traderapi-env
+  Application name: e-traderapi
+  Region: us-west-2
+  Deployed Version: app-bc420-230630_160613554433
+  Environment ID: e-kn3d3z2b39
+  Platform: arn:aws:elasticbeanstalk:us-west-2::platform/Python 3.9 running on 64bit Amazon Linux 2023/4.0.1
+  Tier: WebServer-Standard-1.0
+  CNAME: e-traderapi-env.eba-st3tahpf.us-west-2.elasticbeanstalk.com
+  Updated: 2023-06-30 15:10:51.095000+00:00
+  Status: Ready
+  Health: Red
+ => Add  CNAME to settings.py allowed host -->
+ALLOWED_HOSTS = ['e-traderapi-env.eba-st3tahpf.us-west-2.elasticbeanstalk.com']
 <!-- run deploy  -->
 eb deploy
 <!--run eb open -->
