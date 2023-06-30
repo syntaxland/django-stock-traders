@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout as auth_logout
 from .forms import ProfileRegistrationForm, ProfileLoginForm, ForgetPasswordForm
 from django.contrib import messages
 
@@ -58,6 +58,8 @@ def user_login(request):
                     email = form.cleaned_data['email']
                     password = form.cleaned_data['password']
                     user = authenticate(request, email=email, password=password)
+                    print('user:', user)
+                    print('user.is_authenticated:', request.user.is_authenticated)  
                     if user is not None:
                         login(request, user)
                     return redirect('dashboard')
@@ -72,9 +74,9 @@ def user_login(request):
     return render(request, 'myaccount/login.html', {'form': form})
 
 
-@login_required
-def logout(request):
-    logout(request)
+@login_required(login_url='login')
+def user_logout(request):
+    auth_logout(request)
     return redirect('login')
 
 
@@ -122,6 +124,14 @@ def forget_password(request):
 #         form = ForgetPasswordForm()
     
 #     return render(request, 'myaccount/forget_password.html', {'form': form})
+
+
+def send_email_otp(request):
+    ...
+
+
+def send_sms_otp(request):
+    pass
 
 
 def home(request):

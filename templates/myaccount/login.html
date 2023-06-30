@@ -38,34 +38,3 @@
 </div>
 {% endblock %}
 
-{% comment %} {% extends '../base.html' %}
-
-{% block content %}
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card">
-        <div class="card-body">
-            <h1 class="card-title text-center">Login</h1>
-            <form method="post">
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign In</button>
-    </form>
-{{ captcha }} 
-    <div class="text-center mt-3">
-        <a href="{% url 'forget_password' %}">Forgot password? Reset here.</a>
-    </div>
-    <div class="text-center mt-3">
-        <a href="{% url 'register' %}">Don't have an account? Register here.</a>
-    </div>
-    <div class="text-center mt-3">
-        <span>Or continue with:</span>
-        <a href="" class="btn btn-danger">Google</a>
-    </div>
-        </div>
-    </div>
-</div>
-{% endblock %} 
-
- {% endcomment %}

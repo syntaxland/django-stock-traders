@@ -15,9 +15,5 @@ def generate_trader_data():
 
     return trader_data
 
-
-
-
-
 trader_data = generate_trader_data()
 print(trader_data)

@@ -16,7 +16,6 @@ from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 
 
-@login_required
 def generate_trader_data():
     traders = TraderData.objects.all()
     trader_data = {}
@@ -26,7 +25,7 @@ def generate_trader_data():
     return trader_data
 
 
-@login_required
+# @login_required(login_url='login')
 def dashboard(request):
     if request.method == 'POST':
         form = TraderForm(request.POST)
@@ -50,7 +49,8 @@ def dashboard(request):
     }
     return render(request, 'user_dashboard/dashboard.html', context)
 
-@login_required
+
+# @login_required(login_url='login')
 def admin_dashboard(request):
     trader_data = generate_trader_data()
     # Calculate the necessary data for the admin dashboard
@@ -131,7 +131,7 @@ class AdminDashboardPDFView(LoginRequiredMixin, View):
         return response
 
 
-@login_required
+@login_required(login_url='login')
 def search(request):
     query = request.GET.get('query')
     results = []

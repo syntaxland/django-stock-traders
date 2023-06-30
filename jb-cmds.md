@@ -5,7 +5,7 @@
 python -m venv venv <!-- To creat venv for Windows-->
 venv\Scripts\activate.bat <!-- To activate the venv for Windows and run pip freeze to confirm empty venv-->
 venv\Scripts\deactivate <!-- To deactivate for Windows -->
-
+<!-- OR -->
 sudo apt install python3-venv <!-- To install venv for Ubuntu -->
 python3 -m venv venv <!-- To create for Ubuntu/Unix/MacOS    -->
 source venv/bin/activate <!-- To activate venv for Ubuntu/Unix MacOS -->
@@ -31,6 +31,12 @@ pip install django python-dotenv djongo django-crispy-forms crispy-bootstrap4 bo
 pip install djongo psycopg2-binary mysqlclient
 pip install matplotlib Pillow  channels channels_redis  djangorestframework django-cors-headers 
  -->
+
+pip install django-allauth
+pip install google-auth google-auth-oauthlib google-auth-httplib2
+pip install sib-api-v3-sdk
+
+pip install awsebcli --upgrade --user
 ===================================================================================================
 ### Some Basic Django Testings with `coverage`, flake8 and pep8 
 ===================================================================================================
@@ -123,6 +129,14 @@ git branch -r <!--To checkout remote... git checkout <remote-branch-name> -->
 git branch -a <!--To checkout both -->
 <!-- Pulling from remote origin -->
 git pull origin main
+
+<!--git in a nutshell: 
+git status
+git add .
+git commit -m "new update"
+git push origin main
+
+-->
 ===================================================================================================#### Docker | Docker Compose | kubernetes
 ===================================================================================================
 #### Docker
@@ -187,7 +201,28 @@ kubectl apply -f app-d.yml
 ===================================================================================================
 ### AWS (Cloud)
 ===================================================================================================
+<!-- ## AWS Elastic Beanstalk dpl -->
 pip install awscli <!-- for aws cmds --> 
+aws --version
+<!-- install awsebcli -->
+pip install --user --upgrade  awsebcli
+eb --version
+<!-- configure  .ebextensions/django.config -->
+option_settings:
+  aws:elasticbeanstalk:container:python:
+    WSGIPath: ebdjango.wsgi:application
+<!-- initiate eb to create .elasticbeanstalk/config.yml -->
+eb init -p python-3.9 app-ebdjango
+<!-- create env -->
+eb create env-ebdjango
+<!-- others -->
+eb status
+<!-- add  CNAME to settings.py allowed host -->
+ALLOWED_HOSTS = ['env-ebdjango.eba-pvwy6ir2.us-west-2.elasticbeanstalk.com']
+<!-- run deploy  -->
+eb deploy
+<!--run eb open -->
+eb open
 ===================================================================================================
 ### CI-CD | GitHub Actions | Jenkens | AWS CodePipeLine
 ===================================================================================================

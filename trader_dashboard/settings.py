@@ -218,7 +218,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # for google login option
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by e-mail
     # 'allauth.account.auth_backends.AuthenticationBackend',
@@ -257,7 +257,11 @@ SOCIALACCOUNT_PROVIDERS = {
 #     }
 # }
 
-LOGIN_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+LOGIN_URL = 'login' 
+# LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # for sms otp
@@ -283,3 +287,4 @@ EMAIL_SENDER_NAME = os.getenv('EMAIL_SENDER_NAME')
 
 # for email otp api key
 SENDINBLUE_API_KEY = os.getenv('SENDINBLUE_API_KEY')
+
