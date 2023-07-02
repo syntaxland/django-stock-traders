@@ -65,15 +65,16 @@ pip install -r requirements.txt <!-- To install requirements.txt-->
 django-admin startproject trader_dashboard . <!-- To startproject -->
 python manage.py startapp user_dashboard <!-- To startapp -->
 
-python manage.py makemigrations <!-- To make migrations for db model(s) -->
+python manage.py makemigrations <!-- To make migrations for db model(s) => python manage.py makemigrations myaccount user_dashboard -->
 python manage.py migrate <!-- To migrate migrations data to db -->
 
 python manage.py runserver <!-- To run the server at django default port 8000 -->
-python manage.py createsuperuser <!-- To create a super user for the admin dashboard -->
+python manage.py createsuperuser <!--  => To create a super user for the admin dashboard -->
+<!-- or `python manage.py createsuperuser --username=admin --email=syntaxland@gmail.com` 
+pass: boz1234567-->
 ===================================================================================================
-Username: admin
-Email address: syntaxland@gmail.com
-Password: boz1234567
+
+
 ===================================================================================================
 ### QuerySets
 ===================================================================================================
@@ -83,9 +84,9 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'yoursite.settings')
 django.setup()
 from django.contrib.auth.models import User
+from myaccount.models import Profile
 from user_dashboard.models import TraderData
 from user_dashboard.models import AdminDashboardData 
-from myaccount.models import Profile
 <!-- #### Model QuerySets -->
 TraderData.objects.all()
 AdminDashboardData.objects.all()
@@ -199,7 +200,7 @@ kubectl create -f mongo-d.yml
 kubectl delete -f app-s.yml 
 kubectl apply -f app-d.yml
 ===================================================================================================
-### AWS (Cloud)
+### AWS | CI-CD | GitHub Actions | Jenkens | AWS CodePipeLine
 ===================================================================================================
 <!-- ## AWS Elastic Beanstalk dpl -->
 aws configure <!-- for access secret key config --> 
@@ -212,29 +213,48 @@ eb --version
 option_settings:
   aws:elasticbeanstalk:container:python:
     WSGIPath: trader_dashboard.wsgi:application
-<!-- initiate eb to create .elasticbeanstalk/config.yml -->
-eb init -p python-3.9 e-traderapi
-<!-- create env -->
+<!-- initiate eb to create .elasticbeanstalk/config.yml e.g.  eb init  e-traderapi --platform python-3.9 --region us-east-1 -->
+eb init -p python-3.9 e-traderapi 
+<!-- create env e.g. eb create e-traderapi-env --single --instance-types "t3.micro" --elb-type "application" -->
 eb create e-traderapi-env
 <!-- others -->
 eb status
-<!--Environment details for: e-traderapi-env
+<!--
+  Environment details for: e-traderapi-env
   Application name: e-traderapi
-  Region: us-west-2
-  Deployed Version: app-bc420-230630_160613554433
-  Environment ID: e-kn3d3z2b39
-  Platform: arn:aws:elasticbeanstalk:us-west-2::platform/Python 3.9 running on 64bit Amazon Linux 2023/4.0.1
+  Region: us-east-1
+  Deployed Version: app-e25e-230702_123237111806
+  Environment ID: e-tspsp7isvm
+  Platform: arn:aws:elasticbeanstalk:us-east-1::platform/Python 3.9 running on 64bit 
+  Amazon Linux 2023/4.0.1
   Tier: WebServer-Standard-1.0
-  CNAME: e-traderapi-env.eba-st3tahpf.us-west-2.elasticbeanstalk.com
-  Updated: 2023-06-30 15:10:51.095000+00:00
+  CNAME: e-traderapi-env.eba-rdzmazbj.us-east-1.elasticbeanstalk.com
+  Updated: 2023-07-02 11:36:18.684000+00:00
   Status: Ready
   Health: Red
  => Add  CNAME to settings.py allowed host -->
-ALLOWED_HOSTS = ['e-traderapi-env.eba-st3tahpf.us-west-2.elasticbeanstalk.com']
-<!-- run deploy  -->
-eb deploy
-<!--run eb open -->
-eb open
-===================================================================================================
-### CI-CD | GitHub Actions | Jenkens | AWS CodePipeLine
+ALLOWED_HOSTS = ['e-traderapi-env.eba-rdzmazbj.us-east-1.elasticbeanstalk.com']
+eb deploy <!-- run deploy  -->
+eb open <!--run eb open -->
+eb logs <!--for logs -->
+
+<!-- eb ssh --setup -->
+ssh -i "testapi-key-pair.pem" root@ec2-54-209-118-194.compute-1.amazonaws.com
+eb ssh  e-traderapi-env
+cd /var/app/current
+source /var/app/venv/*/bin/activate
+eb ssh --command "python manage.py migrate"
+<!-- sudo chown ec2-user:ec2-user db.sqlite3
+sudo chmod 664 db.sqlite3 -->
+rm -rf db.sqlite3
+python manage.py makemigrations
+python manage.py migrate
+
+pwd - to checkout working dir
+sudo touch .env - to create the file
+sudo nano .env - to open the file <!-- sudo nano trader_dashboard/settings.py -->
+Control + O - to save the file
+Press Enter - to execute
+Control + X - to exit
+
 ===================================================================================================

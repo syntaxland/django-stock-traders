@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-p*@gb59m452h^zo*^b%htn@(^ed%hja9dq2v_+1qszbg5vjag+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['e-traderapi-env.eba-rdzmazbj.us-east-1.elasticbeanstalk.com', '*']
 
 
 # Application definition
@@ -213,17 +213,17 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'   
 
 # for google login option
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
-    # 'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
 
     # `allauth` specific authentication methods, such as login by e-mail
     # 'allauth.account.auth_backends.AuthenticationBackend',
-]
-
+]  
+ 
 SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = {

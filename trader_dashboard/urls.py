@@ -14,7 +14,7 @@ urlpatterns = [
     # path('', include('captcha_api.urls')),
 
     # Google OAuth paths
-    path('', TemplateView.as_view(template_name="login.html")),
+    # path('', TemplateView.as_view(template_name="login.html")),
     path('accounts/', include('allauth.urls')), 
     path('logout', LogoutView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

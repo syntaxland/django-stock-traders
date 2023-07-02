@@ -86,6 +86,8 @@ def admin_dashboard(request):
 
 
 class AdminDashboardPDFView(LoginRequiredMixin, View):
+    login_url='login'
+    
     def get(self, request):
         trader_data = generate_trader_data()
         total_profit = 0
