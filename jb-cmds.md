@@ -239,16 +239,14 @@ eb open <!--run eb open -->
 eb logs <!--for logs -->
 
 <!-- eb ssh --setup -->
-ssh -i "testapi-key-pair.pem" root@ec2-54-209-118-194.compute-1.amazonaws.com
-eb ssh  e-traderapi-env
 cd /var/app/current
 source /var/app/venv/*/bin/activate
-eb ssh --command "python manage.py migrate"
-<!-- sudo chown ec2-user:ec2-user db.sqlite3
-sudo chmod 664 db.sqlite3 -->
-rm -rf db.sqlite3
+ls -l
+<!-- rm -rf db.sqlite3 -->
 python manage.py makemigrations
 python manage.py migrate
+sudo chmod 777 db.sqlite3
+
 
 pwd - to checkout working dir
 sudo touch .env - to create the file
