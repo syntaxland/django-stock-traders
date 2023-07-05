@@ -95,6 +95,7 @@
                             {% if user.is_authenticated %}
                                 <a class="dropdown-item" href="/logout">Logout</a>
                                 <hr class="dropdown-divider">
+                                <a class="dropdown-item" href="/">Site Doc</a>
                             {% else %}
                                 <a class="dropdown-item" href="/login">Login</a>
                                 <hr class="dropdown-divider">
@@ -106,7 +107,6 @@
             </div>
         </div>
     </nav>
-
     
     <div class="content">
         <div class="container">
@@ -123,6 +123,7 @@
             </div>
 
             {% block content %}
+            <h1 class='text-center'>Welcome to e-Trader API!</h1>
             {% endblock %}
         </div>
     </div>

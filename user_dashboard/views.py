@@ -6,7 +6,8 @@ from django.db.models import Q
 import random
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.admin.views.decorators import staff_member_required
 
 import io
 from django.http import FileResponse
@@ -25,7 +26,7 @@ def generate_trader_data():
     return trader_data
 
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def dashboard(request):
     if request.method == 'POST':
         form = TraderForm(request.POST)
@@ -49,8 +50,8 @@ def dashboard(request):
     }
     return render(request, 'user_dashboard/dashboard.html', context)
 
-
-# @login_required(login_url='login')
+@staff_member_required
+@login_required(login_url='login')
 def admin_dashboard(request):
     trader_data = generate_trader_data()
     # Calculate the necessary data for the admin dashboard
@@ -85,8 +86,11 @@ def admin_dashboard(request):
     return render(request, 'user_dashboard/admin_dashboard.html', context)
 
 
-class AdminDashboardPDFView(LoginRequiredMixin, View):
+class AdminDashboardPDFView(LoginRequiredMixin, UserPassesTestMixin, View):
     login_url='login'
+    
+    def test_func(self):
+        return self.request.user.is_staff
     
     def get(self, request):
         trader_data = generate_trader_data()

@@ -1,10 +1,11 @@
+# Generates a deployment package and deploys a new code version
 name: Django API AWS EB CI-CD
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  # pull_request:
+  #   branches: [main]
 
 env:
   AWS_REGION: us-east-1
@@ -42,7 +43,7 @@ jobs:
           zip -r deploy.zip . -x '.git*'
       - name: Set version label to auto update with timestamp
         id: version
-        run: echo "VERSION_LABEL=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+        run: echo "VERSION_LABEL=$(date +'%Y-%m-%d-%H%M%S')" >> $GITHUB_ENV
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
         with:
@@ -53,4 +54,70 @@ jobs:
           environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
           version_label: ${{ env.VERSION_LABEL }}
           deployment_package: deploy.zip
-          update_environment: true # update current eb environment
+      - name: Collect static files
+        run: python manage.py collectstatic --noinput --clear --verbosity 0
+
+
+
+
+# # Generate deployment package and updates existing code version
+# name: Django API AWS EB CI-CD
+
+# on:
+#   push:
+#     branches: [main]
+#   # pull_request:
+#   #   branches: [main]
+
+# env:
+#   AWS_REGION: us-east-1
+#   EB_APPLICATION_NAME: e-traderapi
+#   EB_ENVIRONMENT_NAME: e-traderapi-env
+
+# jobs:
+#   CI:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#       - name: Set up Python Environment
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: '3.x'
+#       - name: Install Dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+#       - name: Run Tests
+#         run: |
+#           # python manage.py test
+
+#   CD:
+#     needs: [CI]
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout source code
+#         uses: actions/checkout@v2
+#       - name: Generate deployment package with code changes only
+#         run: |
+#           git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+#           zip -r deploy.zip $(cat changed_files.txt) -x '.git*'
+#       - name: Set version label to auto update with timestamp
+#         id: version
+#         run: echo "VERSION_LABEL=$(date +'%Y-%m-%d-%H%M%S')" >> $GITHUB_ENV
+#       - name: Deploy to EB
+#         uses: einaregilsson/beanstalk-deploy@v20
+#         with:
+#           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           region: ${{ env.AWS_REGION }}
+#           application_name: ${{ env.EB_APPLICATION_NAME }}
+#           environment_name: ${{ env.EB_ENVIRONMENT_NAME }}
+#           version_label: ${{ env.VERSION_LABEL }}
+#           deployment_package: deploy.zip
+#       - name: Collect static files
+#         run: python manage.py collectstatic --noinput --clear --verbosity 0
+
+

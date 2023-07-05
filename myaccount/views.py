@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout as auth_logout
-from .forms import ProfileRegistrationForm, ProfileLoginForm, ForgetPasswordForm
+from django.contrib.auth import authenticate, login, logout as auth_logout, get_user_model
 from django.contrib import messages
+from django.db.models import Q
 
 from django.contrib.auth.models import User
+from .forms import ProfileRegistrationForm, ProfileLoginForm, ForgetPasswordForm
+from .models import Profile
+
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
@@ -12,47 +15,27 @@ from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout as auth_logout
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
 
 # def register(request):
 #     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             # Validate the reCAPTCHA field
-#             if form.cleaned_data.get('captcha'):
-#                 # Create a new user
-#                 form.save()
-#                 # Log in the user
-#                 username = form.cleaned_data.get('username')
-#                 password = form.cleaned_data.get('password1')
-#                 user = authenticate(request, username=username, password=password)
-#                 if user is not None:
-#                     login(request, user)
-#                     # Redirect to the dashboard or another page
-#                     return redirect('dashboard')
-#             else:
-#                 # reCAPTCHA validation failed
-#                 messages.error(request, 'Invalid reCAPTCHA. Please try again.')
-#         else:
-#             # Form validation failed
-#             messages.error(request, 'Invalid form submission. Please try again.')
-#     else:
-#         form = UserCreationForm()
-#     return render(request, 'myaccount/register.html', {'form': form})
-
-
-# def register(request):
-#     if request.method == 'POST':
-#         form = ProfileRegistrationForm(request.POST)
+#         form = ProfileProfileRegistrationForm(request.POST)
 #         if form.is_valid():
 #             # Validate the reCAPTCHA field
 #             if form.cleaned_data.get('captcha'):
 #                 # Create a user object
-#                 user = form.save()
+#                 user = User.objects.create_user(
+#                     username=form.cleaned_data['username'],
+#                     email=form.cleaned_data['email'],
+#                     password=form.cleaned_data['password']
+#                 )
+#                 # Associate the user with the profile
+#                 profile = form.save(commit=False)
+#                 profile.user = user
+#                 profile.username = form.cleaned_data['username']
+#                 profile.first_name = form.cleaned_data['first_name']
+#                 profile.last_name = form.cleaned_data['last_name']
+#                 profile.phone_number = form.cleaned_data['phone_number']
+#                 profile.save()
 #                 # Log in the user
 #                 login(request, user)
 #                 # Redirect to the dashboard or another page
@@ -64,26 +47,25 @@ from django.contrib import messages
 #             # Form validation failed
 #             messages.error(request, 'Invalid form submission. Please try again.')
 #     else:
-#         form = ProfileRegistrationForm()
+#         form = ProfileProfileRegistrationForm()
 #     return render(request, 'myaccount/register.html', {'form': form})
 
 
 # def user_login(request):
 #     if request.method == 'POST':
-#         form = ProfileLoginForm(request.POST)
+#         form = ProfileProfileLoginForm(request.POST)
 #         if form.is_valid():
 #             # Validate the reCAPTCHA field
 #             if form.cleaned_data.get('captcha'):
 #                 # reCAPTCHA validation passed
-#                 email = form.cleaned_data['email']
-#                 password = form.cleaned_data['password']
-#                 user = authenticate(request, email=email, password=password)
-#                 if user is not None:
-#                     login(request, user)
+#                     email = form.cleaned_data['email']
+#                     password = form.cleaned_data['password']
+#                     user = authenticate(request, email=email, password=password)
+#                     print('user:', user)
+#                     print('user.is_authenticated:', request.user.is_authenticated)  
+#                     if user is not None:
+#                         login(request, user)
 #                     return redirect('dashboard')
-#                 else:
-#                     # Authentication failed
-#                     messages.error(request, 'Invalid email or password. Please try again.')
 #             else:
 #                 # reCAPTCHA validation failed
 #                 messages.error(request, 'Invalid reCAPTCHA. Please try again.')
@@ -91,63 +73,75 @@ from django.contrib import messages
 #             # Form validation failed
 #             messages.error(request, 'Invalid form submission. Please try again.')
 #     else:
-#         form = ProfileLoginForm()
+#         form = ProfileProfileLoginForm()
 #     return render(request, 'myaccount/login.html', {'form': form})
 
 
-def register(request):
+# using `UserCreationForm` for user registeration
+#---------------------------------------------------------------------------------------------------
+def register_view(request):
+    form = ProfileRegistrationForm()
+
     if request.method == 'POST':
         form = ProfileRegistrationForm(request.POST)
         if form.is_valid():
-            # Validate the reCAPTCHA field
-            if form.cleaned_data.get('captcha'):
-                # Create a user object
-                user = User.objects.create_user(
-                    username=form.cleaned_data['username'],
-                    email=form.cleaned_data['email'],
-                    password=form.cleaned_data['password']
-                )
-                # Associate the user with the profile
-                profile = form.save(commit=False)
-                profile.user = user
-                profile.username = form.cleaned_data['username']
-                profile.first_name = form.cleaned_data['first_name']
-                profile.last_name = form.cleaned_data['last_name']
-                profile.phone_number = form.cleaned_data['phone_number']
-                profile.save()
-                # Log in the user
-                login(request, user)
-                # Redirect to the dashboard or another page
-                return redirect('dashboard')
-            else:
-                # reCAPTCHA validation failed
-                messages.error(request, 'Invalid reCAPTCHA. Please try again.')
+            # Create form
+            form.save()
+            messages.success(request, 'Form submitted successfully.')
+            return redirect('login')
         else:
             # Form validation failed
             messages.error(request, 'Invalid form submission. Please try again.')
-    else:
-        form = ProfileRegistrationForm()
     return render(request, 'myaccount/register.html', {'form': form})
 
 
-def user_login(request):
+# using `forms.ModelForm`  for user registeration
+#---------------------------------------------------------------------------------------------------
+# def register_view(request):
+#     form = ProfileRegistrationForm()
+
+#     if request.method == 'POST':
+#         form = ProfileRegistrationForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             password = form.cleaned_data['password1']
+#             User = get_user_model()
+#             user = User.objects.create_user(email=email, password=password)
+#             # Set additional form fields
+#             user.username = form.cleaned_data['username']
+#             user.first_name = form.cleaned_data['first_name']
+#             user.last_name = form.cleaned_data['last_name']
+#             user.phone_number = form.cleaned_data['phone_number']
+#             user.save()
+
+#             messages.success(request, 'Form submitted successfully.')
+#             return redirect('login')
+#         else:
+#             messages.error(request, 'Invalid form submission. Please try again.')
+    
+#     return render(request, 'myaccount/register.html', {'form': form})
+
+
+# Login with username|email and password (CustomUser model)
+#---------------------------------------------------------------------------------------------------
+def login_view(request):
     if request.method == 'POST':
         form = ProfileLoginForm(request.POST)
         if form.is_valid():
-            # Validate the reCAPTCHA field
-            if form.cleaned_data.get('captcha'):
-                # reCAPTCHA validation passed
-                    email = form.cleaned_data['email']
-                    password = form.cleaned_data['password']
-                    user = authenticate(request, email=email, password=password)
-                    print('user:', user)
-                    print('user.is_authenticated:', request.user.is_authenticated)  
-                    if user is not None:
-                        login(request, user)
-                    return redirect('dashboard')
-            else:
-                # reCAPTCHA validation failed
-                messages.error(request, 'Invalid reCAPTCHA. Please try again.')
+            identifier = form.cleaned_data['identifier']
+            password = form.cleaned_data['password']
+            User = get_user_model()
+            try:
+                user = User.objects.filter(Q(username=identifier) | Q(email=identifier)).first()
+                user = authenticate(request, username=user.username, password=password)
+                if user is not None:
+                    login(request, user)
+                    messages.success(request, 'Login successful.')
+                    return redirect('home')
+                else:
+                    messages.error(request, 'Invalid credentials. Please try again.')
+            except User.DoesNotExist:
+                messages.error(request, 'User does not exist.')
         else:
             # Form validation failed
             messages.error(request, 'Invalid form submission. Please try again.')
@@ -156,8 +150,64 @@ def user_login(request):
     return render(request, 'myaccount/login.html', {'form': form})
 
 
+# Login with username and password (CustomUser model)
+#---------------------------------------------------------------------------------------------------
+# def login_view(request):
+#     if request.method == 'POST':
+#         form = ProfileLoginForm(request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data['username']
+#             password = form.cleaned_data['password']
+#             User = get_user_model()
+#             try:
+#                 user = User.objects.get(username=username)
+#                 user = authenticate(request, username=username, password=password)
+#                 if user is not None:
+#                     login(request, user)
+#                     messages.success(request, 'Login successful.')
+#                     return redirect('home')
+#                 else:
+#                     messages.error(request, 'Invalid credentials. Please try again.')
+#             except User.DoesNotExist:
+#                 messages.error(request, 'User does not exist.')
+#         else:
+#             # Form validation failed
+#             messages.error(request, 'Invalid form submission. Please try again.')
+#     else:
+#         form = ProfileLoginForm()
+#     return render(request, 'myaccount/login.html', {'form': form})
+
+
+
+# Login with email and password (CustomUser model)
+#---------------------------------------------------------------------------------------------------
+# def login_view(request):
+#     if request.method == 'POST':
+#         form = ProfileLoginForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             password = form.cleaned_data['password']
+#             User = get_user_model()
+#             try:
+#                 user = User.objects.get(email=email)
+#                 username = user.username
+#                 user = authenticate(request, username=username, password=password)
+#                 if user is not None:
+#                     login(request, user)
+#                     messages.success(request, 'Login successful.')
+#                     print('User:', user, request.user.first_name, request.user.email, request.user.phone_number)
+#                     print('User is authenticated:', request.user.is_authenticated)
+#                     return redirect('homepage')
+#             except User.DoesNotExist:
+#                 messages.error(request, 'User does not exist. Please try again.')
+#             messages.error(request, 'Invalid credentials. Please try again.')
+#     else:
+#         form = ProfileLoginForm()
+#     return render(request, 'myaccount/login.html', {'form': form})
+
+
 @login_required(login_url='login')
-def user_logout(request):
+def logout_view(request):
     auth_logout(request)
     return redirect('login')
 
@@ -215,6 +265,6 @@ def send_email_otp(request):
 def send_sms_otp(request):
     pass
 
-
+@login_required(login_url='login')
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'base.html')

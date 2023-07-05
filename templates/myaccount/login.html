@@ -9,10 +9,22 @@
             <h1 class="card-title text-center">Login</h1>
             <form method="post" class="text-center">
                 {% csrf_token %}
+                
                 <div class="form-group">
+                    <label for="{{ form.identifier.id_for_label }}">Username or Email</label>
+                    {{ form.identifier }}
+                </div>  
+
+                {% comment %} <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Username</label>
+                    {{ form.username }}
+                </div>  {% endcomment %}
+
+                {% comment %} <div class="form-group">
                     <label for="{{ form.email.id_for_label }}">Email</label>
                     {{ form.email }}
-                </div>
+                </div>   {% endcomment %}
+                
                 <div class="form-group">
                     <label for="{{ form.password.id_for_label }}">Password</label>
                     {{ form.password }}
@@ -20,7 +32,7 @@
                 <div class="form-group">
                     <label for="{{ form.captcha.id_for_label }}">Captcha</label>
                     {{ form.captcha }}
-                </div>
+                </div>  
                 <button type="submit" class="btn btn-primary btn-block rounded-pill">Sign In</button>
             </form>
             <div class="text-center mt-3">

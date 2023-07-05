@@ -1,6 +1,6 @@
 from django.urls import path
 from user_dashboard import views
-
+ 
 from .views import AdminDashboardPDFView
 
 urlpatterns = [

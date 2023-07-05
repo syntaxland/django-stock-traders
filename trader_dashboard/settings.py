@@ -73,7 +73,6 @@ INSTALLED_APPS = [
 # add crispy_bootstrap4 to INSTALLED_APPS
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
   
-# AUTH_USER_MODEL = 'myaccount.User'
 
 # # Configure django channels
 # ASGI_APPLICATION = 'trader_dashboard.routing.application'
@@ -204,11 +203,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
+# MEDIA_ROOT = BASE_DIR / 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -218,7 +221,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # for google login option
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend', 
 
     # `allauth` specific authentication methods, such as login by e-mail
     # 'allauth.account.auth_backends.AuthenticationBackend',
@@ -260,9 +263,6 @@ SOCIALACCOUNT_PROVIDERS = {
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
-LOGIN_URL = 'login' 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/login'
 
 # for sms otp
 TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
@@ -288,3 +288,8 @@ EMAIL_SENDER_NAME = os.getenv('EMAIL_SENDER_NAME')
 # for email otp api key
 SENDINBLUE_API_KEY = os.getenv('SENDINBLUE_API_KEY')
 
+AUTH_USER_MODEL = 'myaccount.Profile'
+
+LOGIN_URL = 'login' 
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login'

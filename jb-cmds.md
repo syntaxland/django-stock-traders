@@ -62,13 +62,13 @@ pip install -r requirements.txt <!-- To install requirements.txt-->
 ===================================================================================================
 ### Setup Django project and app(s) 
 ===================================================================================================
-django-admin startproject trader_dashboard . <!-- To startproject -->
-python manage.py startapp user_dashboard <!-- To startapp -->
+django-admin startproject project . <!-- To startproject -->
+python manage.py startapp app <!-- To startapp -->
 
 python manage.py makemigrations <!-- To make migrations for db model(s) => python manage.py makemigrations myaccount user_dashboard -->
 python manage.py migrate <!-- To migrate migrations data to db -->
 
-python manage.py runserver <!-- To run the server at django default port 8000 -->
+python manage.py runserver <!-- Or at custom port e.g. python manage.py runserver 8001 -->
 python manage.py createsuperuser <!--  => To create a super user for the admin dashboard -->
 <!-- or `python manage.py createsuperuser --username=admin --email=syntaxland@gmail.com` 
 pass: boz1234567-->
@@ -90,7 +90,7 @@ from user_dashboard.models import AdminDashboardData
 <!-- #### Model QuerySets -->
 TraderData.objects.all()
 AdminDashboardData.objects.all()
-Profile.objects.all()
+CustomUser.objects.all()
 <!-- Creating model instance -->
 user = User.objects.create(username='ken')
 email = 'user@gmail.com'
@@ -247,6 +247,7 @@ python manage.py makemigrations
 python manage.py migrate
 sudo chmod 777 db.sqlite3
 
+nano trader_dashboard/settings.py
 
 pwd - to checkout working dir
 sudo touch .env - to create the file
