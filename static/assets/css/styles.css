@@ -37,6 +37,11 @@ body {
     right: 0;
     left: auto;
 }
+/* for phonenumber_field */
+.input-group-text {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
 
 /* 
 html {

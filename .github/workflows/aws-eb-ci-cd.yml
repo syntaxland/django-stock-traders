@@ -58,8 +58,6 @@ jobs:
         # run: python manage.py collectstatic --noinput --clear --verbosity 0
 
 
-
-
 # # Generate deployment package and updates existing code version
 # name: Django API AWS EB CI-CD
 

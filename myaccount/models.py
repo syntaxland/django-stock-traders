@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 
+from phonenumber_field.modelfields import PhoneNumberField
 
 class CustomUserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
@@ -13,7 +14,7 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        # user.save(using=self._db)
+        user.save(using=self._db)
         return user
 
     def create_user(self, email, password=None, **extra_fields):
@@ -37,7 +38,7 @@ class CustomUserManager(BaseUserManager):
 class Profile(AbstractUser):
     # username = models.CharField(max_length=40, unique=True)
     email = models.EmailField(max_length=40, unique=True)
-    phone_number = models.CharField(max_length=20, blank=True)
+    phone_number = PhoneNumberField(max_length=14, blank=True)
     email_otp = models.CharField(max_length=6, blank=True)
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now, blank=True)

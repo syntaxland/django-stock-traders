@@ -63,14 +63,14 @@ pip install -r requirements.txt <!-- To install requirements.txt-->
 ### Setup Django project and app(s) 
 ===================================================================================================
 django-admin startproject project . <!-- To startproject -->
-python manage.py startapp app <!-- To startapp -->
+python manage.py startapp sms_otp <!-- To startapp -->
 
 python manage.py makemigrations <!-- To make migrations for db model(s) => python manage.py makemigrations myaccount user_dashboard -->
 python manage.py migrate <!-- To migrate migrations data to db -->
 
 python manage.py runserver <!-- Or at custom port e.g. python manage.py runserver 8001 -->
 python manage.py createsuperuser <!--  => To create a super user for the admin dashboard -->
-<!-- or `python manage.py createsuperuser --username=admin --email=syntaxland@gmail.com` 
+<!-- or `python manage.py createsuperuser --username=admin2 --email=syntaxland@gmail.me` 
 pass: boz1234567-->
 ===================================================================================================
 
@@ -90,13 +90,14 @@ from user_dashboard.models import AdminDashboardData
 <!-- #### Model QuerySets -->
 TraderData.objects.all()
 AdminDashboardData.objects.all()
-CustomUser.objects.all()
+Profile.objects.all()
 <!-- Creating model instance -->
 user = User.objects.create(username='ken')
 email = 'user@gmail.com'
 traders = TraderData.objects.create(user=user, email=email)
 <!-- Deleting a model instance(s) -->
 TraderData.objects.all().delete()
+Profile.objects.all().delete()
 <!-- #### User Model QuerySets -->
 User.objects.all()
 User.objects.filter().last()
@@ -134,7 +135,7 @@ git pull origin main
 <!--git in a nutshell: 
 git status
 git add .
-git commit -m "new update"
+git commit -m "new update user-auth static-files.config"
 git push origin main
 
 -->
@@ -246,8 +247,12 @@ ls -l
 python manage.py makemigrations
 python manage.py migrate
 sudo chmod 777 db.sqlite3
+python manage.py collectstatic --noinput --clear --verbosity 0
 
+nano myaccount/forms.py
+nano user_dashboard/views.py
 nano trader_dashboard/settings.py
+nano templates/base.html
 
 pwd - to checkout working dir
 sudo touch .env - to create the file

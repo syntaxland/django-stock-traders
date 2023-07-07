@@ -2,6 +2,108 @@
 
 {% load socialaccount %}
 
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="border rounded p-4">
+                    <h1 class="text-center">Register</h1>
+                    <form method="post" class="text-center">
+                        {% csrf_token %}
+                        {{ form.non_field_errors|as_crispy_errors }}
+                        <div class="form-group">
+                            <label for="{{ form.username.id_for_label }}"></label>
+                            {{ form.username|as_crispy_field }}
+                            {% if form.username.errors %}
+                                {% for error in form.username.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.first_name.id_for_label }}"></label>
+                            {{ form.first_name|as_crispy_field }}
+                            {% if form.first_name.errors %}
+                                {% for error in form.first_name.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.last_name.id_for_label }}"></label>
+                            {{ form.last_name|as_crispy_field }}
+                            {% if form.last_name.errors %}
+                                {% for error in form.last_name.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}"></label>
+                            {{ form.email|as_crispy_field }}
+                            {% if form.email.errors %}
+                                {% for error in form.email.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.phone_number.id_for_label }}"></label>
+                            {{ form.phone_number|as_crispy_field }}
+                            {% if form.phone_number.errors %}
+                                {% for error in form.phone_number.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.password1.id_for_label }}"></label>
+                            {{ form.password1|as_crispy_field }}
+                            {% if form.password1.errors %}
+                                {% for error in form.password1.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.password2.id_for_label }}"></label>
+                            {{ form.password2|as_crispy_field }}
+                            {% if form.password2.errors %}
+                                {% for error in form.password2.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label" for="{{ form.captcha.id_for_label }}">Captcha</label>
+                            {{ form.captcha }}
+                            {% if form.captcha.errors %}
+                                {% for error in form.captcha.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block rounded-pill">Register</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-light btn-block rounded-pill">
+                            <i class="fab fa-google mr-2"></i>
+                            Continue with Google
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% comment %} {% extends '../base.html' %}
+
+{% load socialaccount %}
+
 {% block content %}
     <div class="container">
         <div class="row justify-content-center">
@@ -71,4 +173,4 @@
         </div>
     </div>
 {% endblock %}
-
+ {% endcomment %}

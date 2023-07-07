@@ -43,31 +43,34 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    # # required for django allauth => pip install django-allauth==0.52.0
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+ 
+    # # ... include the providers you want to enable: 
+    'allauth.socialaccount.providers.google',
+    # # 'allauth.socialaccount.providers.facebook',
+    # # 'allauth.socialaccount.providers.github',
 
     # started apps 
     'user_dashboard', 
     'myaccount',
-    # 'captcha_api', 
     'email_otp_auth',
- 
+    'sms_otp',
+    'mailer_api',
+    'captcha_api',  
+
     # installed libs
     'captcha', # pip install django-recaptcha 
     'crispy_forms', 
     'crispy_bootstrap4', 
     # 'djongo',
     # 'channels', 
-
-    # # required for django allauth => pip install django-allauth==0.52.0
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
- 
-    # # ... include the providers you want to enable:
-    'allauth.socialaccount.providers.google',
-    # # 'allauth.socialaccount.providers.facebook',
-    # # 'allauth.socialaccount.providers.github',
-]  
+  
+    'phonenumber_field', # pip install "django-phonenumber-field[phonenumbers]" babel
+]   
 
 # pip install django-crispy-forms crispy-bootstrap4  
 # add crispy_bootstrap4 to INSTALLED_APPS
@@ -113,6 +116,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -224,21 +230,32 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend', 
 
     # `allauth` specific authentication methods, such as login by e-mail
-    # 'allauth.account.auth_backends.AuthenticationBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]  
  
 SITE_ID = 1
 
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         },
+#         'OAUTH_PKCE_ENABLED': True,
+#     }
+# }
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        },
-        'OAUTH_PKCE_ENABLED': True,
+        'AUTH_PARAMS': {'access_type': 'online', 'prompt': 'select_account'},
+        'SCOPE': ['profile', 'email'],
+        'AUTHENTICATION_BACKENDS': (
+            'allauth.account.auth_backends.AuthenticationBackend',
+        ),
+        'LOGIN_REDIRECT_URL': '/',  # Optional: Override the global LOGIN_REDIRECT_URL for Google only
     }
 }
 
