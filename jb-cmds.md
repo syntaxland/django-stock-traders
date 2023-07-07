@@ -135,7 +135,7 @@ git pull origin main
 <!--git in a nutshell: 
 git status
 git add .
-git commit -m "new update user-auth static-files.config"
+git commit -m "new update static-files"
 git push origin main
 
 -->
@@ -261,4 +261,21 @@ Control + O - to save the file
 Press Enter - to execute
 Control + X - to exit
 
+
+<!-- static-files.config -->
+option_settings:
+  aws:elasticbeanstalk:environment:proxy:staticfiles:
+    /static: static/
+
+aws:elasticbeanstalk:container:python:
+  WSGIPath: trader_dashboard.wsgi:application
+  PythonVersion: 3.9
+
+commands:
+  01_collectstatic:
+    command: "source /var/app/venv/*/activate && python manage.py collectstatic --noinput"
+
+container_commands:
+  01_migrate:
+    command: "source /var/app/venv/*/activate && python manage.py migrate --noinput"
 ===================================================================================================
