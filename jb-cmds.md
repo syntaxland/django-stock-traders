@@ -239,21 +239,31 @@ eb deploy <!-- run deploy  -->
 eb open <!--run eb open -->
 eb logs <!--for logs -->
 
+<!-- 
+git status
+git add .
+git commit -m "new update"
+git push origin main 
+
+-->
+
+
+
 <!-- eb ssh --setup -->
 cd /var/app/current
 source /var/app/venv/*/bin/activate
 ls -l
 sudo nano .env
 <!-- rm -rf db.sqlite3 -->
-python manage.py makemigrations
+<!-- python manage.py makemigrations -->
 python manage.py migrate
 sudo chmod 777 db.sqlite3
 python manage.py collectstatic --noinput --clear --verbosity 0
 
-nano myaccount/forms.py
+<!-- nano myaccount/forms.py
 nano user_dashboard/views.py
 nano trader_dashboard/settings.py
-nano templates/base.html
+nano templates/base.html -->
 
 pwd - to checkout working dir
 sudo touch .env - to create the file
