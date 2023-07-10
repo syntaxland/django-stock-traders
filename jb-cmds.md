@@ -243,6 +243,7 @@ eb logs <!--for logs -->
 cd /var/app/current
 source /var/app/venv/*/bin/activate
 ls -l
+sudo nano .env
 <!-- rm -rf db.sqlite3 -->
 python manage.py makemigrations
 python manage.py migrate
