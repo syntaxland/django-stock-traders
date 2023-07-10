@@ -10,6 +10,13 @@ body {
 
 }
 
+.avatar {
+    width: 10px;
+    height: 10px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
 .content {
     padding-bottom: 60px; 
     min-height: calc(100vh - 60px); 

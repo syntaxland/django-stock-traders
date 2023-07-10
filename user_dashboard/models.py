@@ -6,10 +6,12 @@ class TraderData(models.Model):
     profit_loss = models.JSONField(default=list)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
 
+    def __str__(self):
+        return self.trader
+
 class AdminDashboardData(models.Model):
     total_profit = models.FloatField()
     total_loss = models.FloatField()
     highest_profit_trader = models.CharField(max_length=100)
     lowest_profit_trader = models.CharField(max_length=100) 
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
-

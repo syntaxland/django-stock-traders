@@ -36,8 +36,8 @@
                             {% endif %}
                         </div>
                         <div class="form-group form-check">
+                            <label class="form-check-label" for="{{ form.captcha.id_for_label }}">Captcha</label>
                             {{ form.captcha }}
-                            <label class="form-check-label" for="{{ form.captcha.id_for_label }}">I'm not a robot</label>
                             {% if form.captcha.errors %}
                                 <div class="invalid-feedback">
                                     {% for error in form.captcha.errors %}
@@ -49,7 +49,7 @@
                         <button type="submit" class="btn btn-primary btn-block rounded-pill">Sign In</button>
                     </form>
                     <div class="text-center mt-3">
-                        <a href="{% url 'forget_password' %}">Forgot password? Reset here.</a>
+                        <a href="{% url 'password_reset_request' %}">Forgot password? Reset here.</a>
                     </div>
                     <div class="text-center mt-3">
                         <a href="{% url 'register' %}">Don't have an account? Register here.</a>

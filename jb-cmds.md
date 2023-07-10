@@ -65,12 +65,12 @@ pip install -r requirements.txt <!-- To install requirements.txt-->
 django-admin startproject project . <!-- To startproject -->
 python manage.py startapp sms_otp <!-- To startapp -->
 
-python manage.py makemigrations <!-- To make migrations for db model(s) => python manage.py makemigrations myaccount user_dashboard -->
-python manage.py migrate <!-- To migrate migrations data to db -->
+python manage.py makemigrations <!-- To make migrations for db model(s) => python manage.py makemigrations send_email_forget_password myaccount user_dashboard -->
+python manage.py migrate <!-- To migrate migrations data to db => python manage.py migrate -->
 
 python manage.py runserver <!-- Or at custom port e.g. python manage.py runserver 8001 -->
 python manage.py createsuperuser <!--  => To create a super user for the admin dashboard -->
-<!-- or `python manage.py createsuperuser --username=admin2 --email=syntaxland@gmail.me` 
+<!-- or `python manage.py createsuperuser --username=admin --email=syntaxland@gmail.com` 
 pass: boz1234567-->
 ===================================================================================================
 

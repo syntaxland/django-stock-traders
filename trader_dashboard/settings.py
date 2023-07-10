@@ -29,8 +29,9 @@ SECRET_KEY = 'django-insecure-p*@gb59m452h^zo*^b%htn@(^ed%hja9dq2v_+1qszbg5vjag+
 # SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+# DEBUG = False
+DEBUG = True   
+ 
 ALLOWED_HOSTS = ['e-traderapi-env.eba-rdzmazbj.us-east-1.elasticbeanstalk.com', '*']
 
 
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     # started apps 
     'user_dashboard', 
     'myaccount',
+    'send_email_forget_password', 
     'email_otp_auth',
     'sms_otp',
     'mailer_api',
@@ -304,9 +306,10 @@ EMAIL_SENDER_NAME = os.getenv('EMAIL_SENDER_NAME')
 
 # for email otp api key
 SENDINBLUE_API_KEY = os.getenv('SENDINBLUE_API_KEY')
-
+  
 AUTH_USER_MODEL = 'myaccount.Profile'
-
+ 
 LOGIN_URL = 'login' 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login'
+         

@@ -1,0 +1,44 @@
+{% extends '../base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="text-center">Delete Account</h1>
+                        <p class="text-center">Are you sure you want to delete your account? This action is irreversible.</p>
+                        <form method="post" action="{% url 'account-delete' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ delete_form.password.label_tag }}
+                                {{ delete_form.password }}
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-danger">Delete Account</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% comment %} {% extends '../base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Delete Account</h1>
+        <p>Are you sure you want to delete your account? This action is irreversible.</p>
+        <form method="post" action="{% url 'account-delete' %}">
+            {% csrf_token %}
+            {{ delete_form.as_p }}
+            <button type="submit" class="btn btn-danger">Delete Account</button>
+        </form>
+    </div>
+{% endblock %} {% endcomment %}

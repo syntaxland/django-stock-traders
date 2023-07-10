@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import EmailOtp
 
-# Register your models here.
+
+class EmailOtpAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email_otp', 'created_at')
+
+admin.site.register(EmailOtp, EmailOtpAdmin)
+

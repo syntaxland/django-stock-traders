@@ -11,6 +11,7 @@ urlpatterns = [
     path('', include('user_dashboard.urls')),
     path('', include('myaccount.urls')),
     path('', include('email_otp_auth.urls')),
+    path('', include('send_email_forget_password.urls')),
     # path('', include('captcha_api.urls')),
 
     # Google OAuth paths

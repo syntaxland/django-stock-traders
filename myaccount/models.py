@@ -2,6 +2,11 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils import timezone
 
+from django.utils.crypto import get_random_string
+import random
+import string
+
+
 from phonenumber_field.modelfields import PhoneNumberField
 
 class CustomUserManager(BaseUserManager):
@@ -36,12 +41,13 @@ class CustomUserManager(BaseUserManager):
 
 
 class Profile(AbstractUser):
-    # username = models.CharField(max_length=40, unique=True)
     email = models.EmailField(max_length=40, unique=True)
     phone_number = PhoneNumberField(max_length=14, blank=True)
-    email_otp = models.CharField(max_length=6, blank=True)
+    # email_otp = models.CharField(max_length=6, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
+    avatar = models.ImageField(upload_to='images/avatars/', blank=True)
     created_at = models.DateTimeField(default=timezone.now, blank=True)
+    date_modified = models.DateTimeField(auto_now=True, blank=True)
 
     #     USERNAME_FIELD = 'email'
     #     REQUIRED_FIELDS = []
@@ -50,5 +56,3 @@ class Profile(AbstractUser):
 
     class Meta:
         default_related_name = 'profile'
-
-

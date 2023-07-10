@@ -1,19 +1,66 @@
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout as auth_logout, get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate, login, logout as auth_logout, get_user_model, update_session_auth_hash
 from django.contrib import messages
 from django.db.models import Q
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView 
 
-from django.contrib.auth.models import User
-from .forms import ProfileRegistrationForm, ProfileLoginForm, ForgetPasswordForm
+from .forms import ProfileRegistrationForm, ProfileLoginForm, UserProfileForm, CustomPasswordChangeForm, DeleteAccountForm
 from .models import Profile
 
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
+User = get_user_model()
+
+
+# # using `UserCreationForm` for user registeration (without captcha val)
+# #---------------------------------------------------------------------------------------------------
+def register_view(request):
+    form = ProfileRegistrationForm()
+
+    if request.method == 'POST':
+        form = ProfileRegistrationForm(request.POST)
+        if form.is_valid():
+            # Create form
+            form.save()
+            messages.success(request, 'Form submitted successfully.')
+            return redirect('login')
+        else:
+            # Form validation failed
+            messages.warning(request, 'Invalid form submission. Please try again.')
+    return render(request, 'myaccount/register.html', {'form': form})
+
+
+# Login with username|email and password for CustomUser model (without captcha val)
+# #---------------------------------------------------------------------------------------------------
+def login_view(request):
+    form = ProfileLoginForm()
+
+    if request.method == 'POST':
+        form = ProfileLoginForm(request.POST)
+        if form.is_valid():
+            identifier = form.cleaned_data['identifier']
+            password = form.cleaned_data['password']
+            User = get_user_model()
+            try:
+                user = User.objects.filter(Q(username=identifier) | Q(email=identifier)).first()
+                user = authenticate(request, username=user.username, password=password)
+                if user is not None:
+                    login(request, user)
+                    messages.success(request, 'Login successful.')
+                    return redirect('home')
+                else:
+                    messages.info(request, 'Invalid credentials. Please try again.')
+            except User.DoesNotExist:
+                messages.info(request, 'User does not exist.')
+            except:
+                messages.warning(request, 'Something went wrong. Please try again.')
+        else:
+            # Form validation failed
+            messages.info(request, 'Invalid form submission. Please try again.')
+
+    return render(request, 'account/login.html', {'form': form})
 
 
 ## using `UserCreationForm` for user registeration -- checks if username, email, or phone number already exists
@@ -107,7 +154,7 @@ from django.utils.encoding import force_bytes
 #             # Form validation failed
 #             messages.info(request, 'Invalid form submission. Please try again.')
 
-#     return render(request, 'myaccount/login.html', {'form': form})
+#     return render(request, 'account/login.html', {'form': form})
 
 
 # def login_view(request):
@@ -144,55 +191,6 @@ from django.utils.encoding import force_bytes
 #             messages.info(request, 'Invalid form submission. Please try again.')
 
 #     return render(request, 'account/login.html', {'form': form})
-
-
-# # using `UserCreationForm` for user registeration (without captcha)
-# #---------------------------------------------------------------------------------------------------
-def register_view(request):
-    form = ProfileRegistrationForm()
-
-    if request.method == 'POST':
-        form = ProfileRegistrationForm(request.POST)
-        if form.is_valid():
-            # Create form
-            form.save()
-            messages.success(request, 'Form submitted successfully.')
-            return redirect('login')
-        else:
-            # Form validation failed
-            messages.warning(request, 'Invalid form submission. Please try again.')
-    return render(request, 'myaccount/register.html', {'form': form})
-
-
-# Login with username|email and password for CustomUser model (without captcha)
-# #---------------------------------------------------------------------------------------------------
-def login_view(request):
-    form = ProfileLoginForm()
-
-    if request.method == 'POST':
-        form = ProfileLoginForm(request.POST)
-        if form.is_valid():
-            identifier = form.cleaned_data['identifier']
-            password = form.cleaned_data['password']
-            User = get_user_model()
-            try:
-                user = User.objects.filter(Q(username=identifier) | Q(email=identifier)).first()
-                user = authenticate(request, username=user.username, password=password)
-                if user is not None:
-                    login(request, user)
-                    messages.success(request, 'Login successful.')
-                    return redirect('home')
-                else:
-                    messages.info(request, 'Invalid credentials. Please try again.')
-            except User.DoesNotExist:
-                messages.info(request, 'User does not exist.')
-            except:
-                messages.warning(request, 'Something went wrong. Please try again.')
-        else:
-            # Form validation failed
-            messages.info(request, 'Invalid form submission. Please try again.')
-
-    return render(request, 'myaccount/login.html', {'form': form})
 
 
 # using `forms.ModelForm` for user registeration
@@ -247,8 +245,7 @@ def login_view(request):
 #             messages.error(request, 'Invalid form submission. Please try again.')
 #     else:
 #         form = ProfileLoginForm()
-#     return render(request, 'myaccount/login.html', {'form': form})
-
+#     return render(request, 'account/login.html', {'form': form})
 
 
 # Login with email and password (CustomUser model)
@@ -275,7 +272,12 @@ def login_view(request):
 #             messages.error(request, 'Invalid credentials. Please try again.')
 #     else:
 #         form = ProfileLoginForm()
-#     return render(request, 'myaccount/login.html', {'form': form})
+#     return render(request, 'account/login.html', {'form': form})
+
+
+@login_required(login_url='login')
+def home(request):
+    return render(request, 'base.html')
 
 
 @login_required(login_url='login')
@@ -284,65 +286,62 @@ def logout_view(request):
     return redirect('login')
 
 
-def forget_password(request):
-    form = ForgetPasswordForm()
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your password has been changed successfully.')
+            return redirect('profile')
+    else:
+        form = CustomPasswordChangeForm(request.user)
+    
+    return render(request, 'myaccount/change_password.html', {'form': form})
+
+
+@login_required
+def profile_view(request):
+    profile = request.user
+    form = UserProfileForm(instance=profile)
 
     if request.method == 'POST':
-        pass
-#         form = ForgetPasswordForm(request.POST)
-#         if form.is_valid():
-#             email = form.cleaned_data['email']
-            
-#             # Check if the user with the provided email exists
-#             try:
-#                 user = User.objects.get(email=email)
-#             except User.DoesNotExist:
-#                 user = None
-            
-#             if user is not None:
-#                 # Generate the password reset token
-#                 token_generator = default_token_generator
-#                 uid = urlsafe_base64_encode(force_bytes(user.pk))
-#                 token = token_generator.make_token(user)
-                
-#                 # Build the reset password URL
-#                 current_site = get_current_site(request)
-#                 reset_password_url = f"http://{current_site.domain}/reset-password/{uid}/{token}/"
-                
-#                 # Create the email subject and message
-#                 subject = 'Reset Your Password'
-#                 message = render_to_string('myaccount/reset_password_email.html', {
-#                     'user': user,
-#                     'reset_password_url': reset_password_url,
-#                 })
-                
-#                 # Send the password reset email
-#                 send_mail(subject, message, 'noreply@example.com', [email])
-                
-#                 # Display a success message
-#                 messages.success(request, 'An email has been sent with instructions to reset your password.')
-                
-#                 return redirect('login')
-#             else:
-#                 # Display an error message if the email is not associated with any user
-#                 messages.error(request, 'Invalid email address.')
-    
-    return render(request, 'myaccount/forget_password.html', {'form': form})
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully.')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'myaccount/profile.html', context)
 
 
-def send_email_otp(request):
-    ...
+class AccountDeleteView(LoginRequiredMixin, TemplateView):
+    model = Profile
+    success_url = reverse_lazy('home')
+    template_name = 'myaccount/delete_account.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_form'] = DeleteAccountForm()
+        return context
 
-def send_sms_otp(request):
-    pass
+    def post(self, request, *args, **kwargs):
+        delete_form = DeleteAccountForm(request.POST)
 
-@login_required(login_url='login')
-def home(request):
-    return render(request, 'base.html')
+        if delete_form.is_valid():
+            password = delete_form.cleaned_data['password']
+            user = authenticate(request, username=request.user.username, password=password)
 
-
-@login_required(login_url='login')
-def profile(request):
-    pass
-    return render(request, 'myaccount/profile.html')
+            if user is not None:
+                self.request.user.delete()
+                messages.success(request, 'Account deleted successfully.')
+                return redirect(self.success_url)
+            else:
+                messages.warning(request, 'Invalid password. Account deletion failed.')
+        
+        context = self.get_context_data(delete_form=delete_form)
+        return self.render_to_response(context)
+        
