@@ -247,15 +247,15 @@ git push origin main
 
 -->
 
-
-
 <!-- eb ssh --setup -->
 cd /var/app/current
 source /var/app/venv/*/bin/activate
 ls -l
 sudo nano .env
 <!-- rm -rf db.sqlite3 -->
-<!-- python manage.py makemigrations -->
+<!-- python manage.py makemigrations 
+python manage.py createsuperuser --username=admin --email=admin@admin.com
+-->
 python manage.py migrate
 sudo chmod 777 db.sqlite3
 python manage.py collectstatic --noinput --clear --verbosity 0
@@ -277,16 +277,14 @@ Control + X - to exit
 option_settings:
   aws:elasticbeanstalk:environment:proxy:staticfiles:
     /static: static/
+  aws:elasticbeanstalk:container:python:
+    WSGIPath: trader_dashboard.wsgi:application
 
-aws:elasticbeanstalk:container:python:
-  WSGIPath: trader_dashboard.wsgi:application
-  PythonVersion: 3.9
+  commands:
+    01_collectstatic:
+      command: "source /var/app/venv/*/activate && python manage.py collectstatic --noinput"
 
-commands:
-  01_collectstatic:
-    command: "source /var/app/venv/*/activate && python manage.py collectstatic --noinput"
-
-container_commands:
-  01_migrate:
-    command: "source /var/app/venv/*/activate && python manage.py migrate --noinput"
+  container_commands:
+    01_migrate:
+      command: "source /var/app/venv/*/activate && python manage.py migrate --noinput"
 ===================================================================================================
