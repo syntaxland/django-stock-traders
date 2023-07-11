@@ -248,8 +248,7 @@ git push origin main
 -->
 
 <!-- eb ssh --setup -->
-cd /var/app/current
-source /var/app/venv/*/bin/activate
+cd /var/app/current && source /var/app/venv/*/bin/activate
 ls -l
 sudo nano .env
 <!-- rm -rf db.sqlite3 -->
